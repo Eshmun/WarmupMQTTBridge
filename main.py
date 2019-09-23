@@ -15,7 +15,7 @@ device = warmup4ie.Warmup4IEDevice(secrets.email, secrets.password,
                                    secrets.location, secrets.room, 21)
 
 client = mqtt.Client("WarmupBridge")
-client.connect("test.mosquitto.org")
+client.connect(secrets.broker)
 
 client.subscribe(TEMPERATURE_COMMAND_TOPIC)
 client.subscribe(MODE_COMMAND_TOPIC)
