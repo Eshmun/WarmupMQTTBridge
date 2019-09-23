@@ -26,13 +26,14 @@ def on_message(client, userdata, message):
         device.set_new_temperature(int(message.payload))
 
     if message.topic == MODE_COMMAND_TOPIC:
-        if message.payload == "off":
+        if message.payload == b"off":
             device.set_location_to_frost()
 
-        elif message.payload == "heat":
+        elif message.payload == b"heat":
+            print("Set to manual")
             device.set_temperature_to_manual()
 
-        elif message.payload == "auto":
+        elif message.payload == b"auto":
             device.set_temperature_to_auto()
 
     print(message.topic)
