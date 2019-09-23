@@ -18,6 +18,19 @@ client.subscribe("climate/warmup/mode/set")
 
 
 def on_message(client, userdata, message):
+    if message.topic == "climate/warmup/temperature/set":
+        device.set_new_temperature(int(message.payload))
+
+    if message.topic == "climate/warmup/mode/set":
+        if message.payload == "off":
+            device.set_location_to_off()
+
+        elif message.payload == "heat":
+            device.set_temperature_to_manual()
+
+        elif message.payload == "auto":
+            device.set_temperature_to_auto()
+
     print(message.payload)
 
 
@@ -27,10 +40,10 @@ def update():
     current_temperature = device.get_current_temmperature()
     target_temperature = device.get_target_temmperature()
     run_mode = device.get_run_mode()
-    data_out = {"available": "online",
-                "current_temperature": current_temperature,
-                "target_temperature": target_temperature,
-                "run_mode": run_mode}
+    data_out = {"available":            "online",
+                "current_temperature":  current_temperature,
+                "target_temperature":   target_temperature,
+                "run_mode":             run_mode}
     client.publish("climate/warmup", json.dumps(data_out))
     print("hello, world")
 
@@ -43,10 +56,3 @@ client.on_message = on_message
 
 while 1:
     client.loop_forever()
-
-print(device.get_current_temmperature())
-print(device.get_target_temmperature())
-# device.set_new_temperature(17.5)
-# device.set_temperature_to_auto()
-# device.set_location_to_frost()
-print(device.get_all_devices())
