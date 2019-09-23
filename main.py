@@ -5,7 +5,7 @@ import json
 
 import secrets
 
-UPDATE_INTERVAL = 10
+UPDATE_INTERVAL = 1
 TEMPERATURE_COMMAND_TOPIC = "climate/warmup/temperature/set"
 MODE_COMMAND_TOPIC = "climate/warmup/mode/set"
 DATA_UPDATE_TOPIC = "climate/warmup"
@@ -21,9 +21,12 @@ client.subscribe(TEMPERATURE_COMMAND_TOPIC)
 client.subscribe(MODE_COMMAND_TOPIC)
 
 
+
 def on_message(client, userdata, message):
+    print(message.topic)
+    print(message.payload)
     if message.topic == TEMPERATURE_COMMAND_TOPIC:
-        device.set_new_temperature(int(message.payload))
+        device.set_new_temperature(int(float(message.payload.decode('utf8'))))
 
     if message.topic == MODE_COMMAND_TOPIC:
         if message.payload == b"off":
@@ -36,8 +39,7 @@ def on_message(client, userdata, message):
         elif message.payload == b"auto":
             device.set_temperature_to_auto()
 
-    print(message.topic)
-    print(message.payload)
+
 
 
 def update():
